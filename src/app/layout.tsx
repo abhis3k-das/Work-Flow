@@ -2,8 +2,18 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/navbar/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+
+import { Separator } from "@/components/ui/separator"
+import {
+  SidebarInset,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/input-group";
+import { Search } from "lucide-react";
+
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,11 +47,38 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SidebarProvider>
-            <AppSidebar/>
-            <main>
-              <SidebarTrigger/>
+            <AppSidebar variant="inset" />
+            <SidebarInset>
+              <header className="w-full flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+                <div className="w-full flex items-center gap-2 px-4">
+                  <SidebarTrigger className="-ml-1" />
+                  <Separator
+                    orientation="vertical"
+                    className="mr-2 data-[orientation=vertical]:h-4"
+                  />
+                  <div className="w-full px-4 flex justify-between items-center">
+                  <div className="w-1/2">
+                    <InputGroup >
+                      <InputGroupInput placeholder="Search for task/issues..." />
+                      <InputGroupAddon>
+                        <Search />
+                      </InputGroupAddon>
+                      {/* <InputGroupAddon align="inline-end">12 results</InputGroupAddon> */}
+                    </InputGroup>
+                  </div>
+
+                    <div className="flex gap-4">
+                      <div>Item 1</div>
+                      <div>Item 2</div>
+                      <div>Item 3</div>
+                      <div>Item 4</div>
+                    </div>
+                  </div>
+                </div>
+              </header>
               {children}
-            </main>
+            </SidebarInset>
+
           </SidebarProvider>
         </ThemeProvider>
 
