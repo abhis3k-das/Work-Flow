@@ -1,24 +1,14 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import {
-  AudioWaveform,
-  Command,
-  GalleryVerticalEnd,
-} from "lucide-react"
+import * as React from 'react';
+import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react';
 
-import { NavMain } from "@/components/navbar/nav-main"
-import { NavUser } from "@/components/navbar/nav-user"
-import { WorkspaceSwitcher } from "@/components/navbar/workspace-switcher"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
-} from "@/components/ui/sidebar"
+import { NavMain } from '@/components/navbar/nav-main';
+import { NavUser } from '@/components/navbar/nav-user';
+import { WorkspaceSwitcher } from '@/components/navbar/workspace-switcher';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
 
-import { SIDEBAR_ITEMS } from "@/lib/constants/menu"
+import { SIDEBAR_ITEMS } from '@/lib/constants/menu';
 
 /* 
   1. When authentication is Added then get the name and email and upate the user.
@@ -26,28 +16,28 @@ import { SIDEBAR_ITEMS } from "@/lib/constants/menu"
 */
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: ""// "/avatars/shadcn.jpg",
+    name: 'shadcn',
+    email: 'm@example.com',
+    avatar: '', // "/avatars/shadcn.jpg",
   },
   workspaces: [
     {
-      name: "Acme Inc",
+      name: 'Acme Inc',
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      plan: 'Enterprise',
     },
     {
-      name: "Acme Corp.",
+      name: 'Acme Corp.',
       logo: AudioWaveform,
-      plan: "Startup",
+      plan: 'Startup',
     },
     {
-      name: "Evil Corp.",
+      name: 'Evil Corp.',
       logo: Command,
-      plan: "Free",
+      plan: 'Free',
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -68,5 +58,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

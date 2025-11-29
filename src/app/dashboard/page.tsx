@@ -1,15 +1,14 @@
-import IssuesList from "./IssuesList";
-import OverviewAndActions from "./OverviewAndActions";
-import TaskList from "./TaskList";
-
+import IssuesList from './IssuesList';
+import OverviewAndActions from './OverviewAndActions';
+import TaskList from './TaskList';
 
 export default function Page() {
   return (
     <div className="flex w-full flex-col gap-6">
-      <OverviewAndActions/>
+      <OverviewAndActions />
       <div className="flex w-full items-center justify-between gap-4">
-          <TaskList/>
-          <IssuesList/>
+        <TaskList />
+        <IssuesList />
       </div>
       <div></div>
       <div></div>

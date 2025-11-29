@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -125,10 +125,9 @@
   }
 }
 
-
-.light-shade{
+.light-shade {
   background: #ffffff;
-  color : black;
+  color: black;
   border-color: rgba(0, 0, 0, 0.1);
 }
 
@@ -136,16 +135,15 @@
   background-color: #d4d4d4;
 }
 
-.dark-shade{
+.dark-shade {
   border-color: rgba(255, 255, 255, 0.1);
   background: #202020;
   color: #ffffff;
 }
 
-.dark-shade:hover{
+.dark-shade:hover {
   background: #2a2a2a;
 }
-
 
 .customBtn {
   border-radius: 0.75rem;
