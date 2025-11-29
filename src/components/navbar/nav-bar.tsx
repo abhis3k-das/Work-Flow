@@ -1,14 +1,14 @@
-import { AppSidebar } from '@/components/navbar/app-sidebar';
-import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar } from "@/components/navbar/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
-import { Separator } from '@/components/ui/separator';
-import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-import { InputGroup, InputGroupInput, InputGroupAddon } from '@/components/ui/input-group';
-import { AlarmClock, Bell, Search, UserCircle2Icon } from 'lucide-react';
-import { ThemeToggle } from '../toggle-theme';
+import { Separator } from "@/components/ui/separator";
+import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/input-group";
+import { AlarmClock, Bell, Search, UserCircle2Icon } from "lucide-react";
+import { ThemeToggle } from "../toggle-theme";
 
 export default function NavBar({ children }: { children: React.ReactNode }) {
-  const iconSize = 'h-5 w-5';
+  const iconSize = "h-5 w-5";
   return (
     <SidebarProvider>
       <AppSidebar variant="inset" />
@@ -37,7 +37,7 @@ export default function NavBar({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         </header>
-        <div className="pad h-full w-full overflow-scroll">{children}</div>
+        <div className="pad h-[90vh] w-full overflow-y-scroll">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

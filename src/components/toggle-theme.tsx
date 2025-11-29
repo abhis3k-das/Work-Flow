@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useTheme } from 'next-themes';
-import { MoonIcon, SunIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useTheme } from "next-themes";
+import { MoonIcon, SunIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export function ThemeToggle({ iconSize }: { iconSize: string }) {
   const { theme, setTheme } = useTheme();
@@ -15,12 +15,12 @@ export function ThemeToggle({ iconSize }: { iconSize: string }) {
   if (!mounted) return <MoonIcon className={iconSize} />;
 
   const handleToggle = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   return (
     <div onClick={handleToggle} className="cursor-pointer rounded-full transition-all duration-300 active:scale-95">
-      {theme === 'dark' ? <MoonIcon className={iconSize} /> : <SunIcon className={iconSize} />}
+      {theme === "dark" ? <MoonIcon className={iconSize} /> : <SunIcon className={iconSize} />}
     </div>
   );
 }

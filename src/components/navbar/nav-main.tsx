@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { ChevronRight } from 'lucide-react';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { ChevronRight } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -11,14 +11,14 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from '@/components/ui/sidebar';
-import { MenuType } from '@/lib/constants/menu';
-import Link from 'next/link';
-import { useState } from 'react';
+} from "@/components/ui/sidebar";
+import { MenuType } from "@/lib/constants/menu";
+import Link from "next/link";
+import { useState } from "react";
 
 export function NavMain({ items }: { items: MenuType[] }) {
-  const [parent, setParent] = useState('');
-  const [child, setChild] = useState('');
+  const [parent, setParent] = useState("");
+  const [child, setChild] = useState("");
 
   const makeActive = (subItemUrl: string, itemUrl: string) => {
     setParent(itemUrl);
@@ -55,7 +55,7 @@ export function NavMain({ items }: { items: MenuType[] }) {
             </Collapsible>
           ) : (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild isActive={parent === item.url} onClick={() => makeActive('', item.url)}>
+              <SidebarMenuButton asChild isActive={parent === item.url} onClick={() => makeActive("", item.url)}>
                 <Link href={item.url}>
                   {item.icon && <item.icon />}
                   {item.title}
