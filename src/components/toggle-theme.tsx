@@ -2,9 +2,17 @@
 
 import { useTheme } from "next-themes";
 import { MoonIcon, SunIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export function ThemeToggle({iconSize} : {iconSize : string}) {
   const { theme, setTheme } = useTheme();
+
+  const [mounted , setMounted] = useState(false);
+  useEffect(()=>{
+    setMounted(true);
+  },[])
+
+  if(!mounted) return <MoonIcon className={iconSize} />
 
   const handleToggle = () => {
     setTheme(theme === "dark" ? "light" : "dark");

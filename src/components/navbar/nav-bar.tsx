@@ -44,7 +44,9 @@ export default function NavBar({ children }: { children: React.ReactNode }) {
                     </div>
                 </div>
             </header>
-            {children}
+            <div className="pad w-full h-full overflow-scroll">
+                {children}
+            </div>
         </SidebarInset>
     </SidebarProvider>)
 }

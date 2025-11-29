@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   --color-background: var(--background);
@@ -112,6 +112,10 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+.pad {
+  padding: 20px;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -119,4 +123,53 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+
+.light-shade{
+  background: #ffffff;
+  color : black;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.light-shade:hover {
+  background-color: #d4d4d4;
+}
+
+.dark-shade{
+  border-color: rgba(255, 255, 255, 0.1);
+  background: #202020;
+  color: #ffffff;
+}
+
+.dark-shade:hover{
+  background: #2a2a2a;
+}
+
+
+.customBtn {
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  color: #000000;
+}
+
+.customBtn:hover {
+  background: #d4d4d4;
+}
+
+html.dark .customBtn {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: #202020;
+  color: #ffffff;
+}
+
+html.dark .customBtn:hover {
+  background: #2a2a2a;
 }
