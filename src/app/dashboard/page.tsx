@@ -1,5 +1,5 @@
 import { Card, CardTitle } from "@/components/ui/card";
-import UserSection from "./(user-section)/UserSection";
+import UserSection from "./(user-section)";
 import IssuesList from "./IssuesList";
 import OverviewAndActions from "./OverviewAndActions";
 import TaskList from "./TaskList";

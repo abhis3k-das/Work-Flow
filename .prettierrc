@@ -3,6 +3,14 @@
   "tabWidth": 2,
   "semi": true,
   "trailingComma": "all",
-  "plugins": ["prettier-plugin-tailwindcss"],
-  "tailwindFunctions": ["cn", "cva"]
+  "plugins": ["prettier-plugin-tailwindcss","prettier-plugin-prisma"],
+  "tailwindFunctions": ["cn", "cva"],
+  "overrides": [
+    {
+      "files": "*.prisma",
+      "options": {
+        "parser": "prisma"
+      }
+    }
+  ]
 }

@@ -1,3 +1,4 @@
+import PageTitle from "@/components/page-title";
 import CopyWithTooltip from "@/components/tooltip-copy";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -138,7 +139,7 @@ export default function UserPage() {
 
   return (
     <>
-      <h1 className="mb-2 text-xl font-bold">Users</h1>
+      <PageTitle title="Users" />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
         <TopCards count={padStartText(DUMMY_DATA.total_users)} title="Total Users" Icon={User2} type="dark" />
         <TopCards count={padStartText(DUMMY_DATA.active_users)} title="Active Users" Icon={UserCheck2Icon} type="light" />

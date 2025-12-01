@@ -1,0 +1,175 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships    WorkspaceMember[]
+  tasksAssigned  Task[]            @relation("TaskAssignee")
+  tasksReviewing Task[]            @relation("TaskReviewer")
+  messages       Message[]
+  taskComments   TaskComment[]
+  documents      Document[]
+  // invitations    Invitation[]
+}
+
+model Invitation {
+  id        String    @id @default(cuid())
+  name      String
+  email     String
+  role      String // later you can make enum
+  token     String    @unique
+  status    String    @default("pending") // pending | accepted | revoked | expired
+  expiresAt DateTime?
+  note      String?
+
+  workspaceId String
+  // workspace   Workspace @relation(fields: [workspaceId], references: [id])
+
+  invitedBy String
+  // invitedById String
+  // invitedBy   User   @relation(fields: [invitedById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Workspace {
+  id          String            @id @default(cuid())
+  name        String
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  members     WorkspaceMember[]
+  projects    Project[]
+  channel     Channel[]
+  documents   Document[]
+  // invitations Invitation[]
+}
+
+model WorkspaceMember {
+  id          String    @id @default(cuid())
+  role        String
+  userId      String
+  workspaceId String
+  user        User      @relation(fields: [userId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+
+  @@unique([userId, workspaceId])
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  name        String
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  tasks       Task[]
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  status      String // todo | in-progress | done
+  priority    String?
+  dueDate     DateTime?
+
+  // Who is doing it?
+  assigneeId String?
+  assignee   User?   @relation("TaskAssignee", fields: [assigneeId], references: [id])
+
+  // Who reviews/approves it?
+  reviewerId String?
+  reviewer   User?   @relation("TaskReviewer", fields: [reviewerId], references: [id])
+
+  // Comments
+  comments TaskComment[]
+
+  // Project link
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TaskComment {
+  id   String @id @default(cuid())
+  body String
+
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id])
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Channel {
+  id          String  @id @default(cuid())
+  name        String
+  description String? // optional
+  isPrivate   Boolean @default(false)
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+
+  messages Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Message {
+  id      String @id @default(cuid())
+  content String
+
+  channelId String
+  channel   Channel @relation(fields: [channelId], references: [id])
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  // optional reply/threading later if you want
+  // replyToId  String?
+  // replyTo    Message? @relation("MessageReplies", fields: [replyToId], references: [id])
+  // replies    Message[] @relation("MessageReplies")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Document {
+  id    String @id @default(cuid())
+  title String
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+
+  // Hierarchy: pages inside pages
+  parentId String?
+  parent   Document?  @relation("DocumentChildren", fields: [parentId], references: [id])
+  children Document[] @relation("DocumentChildren")
+
+  // Store TipTap/Notion-style content as JSON for now
+  content Json?
+
+  isArchived Boolean @default(false)
+
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -201,3 +201,7 @@ html.dark .customBtn:hover {
   scrollbar-width: none !important; /* Firefox */
   -ms-overflow-style: none !important; /* IE/Edge */
 }
+
+.page-title {
+  @apply mb-2 text-xl font-bold;
+}

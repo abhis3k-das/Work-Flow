@@ -1,0 +1,33 @@
+install prisma
+npm install prisma @prisma/client
+
+initial Prisma
+npx prisma init --datasource-provider postgresql 
+
+
+setup postgres
+docker run --name my-postgres -e POSTGRES_USER=workflow_user -e POSTGRES_PASSWORD=password -e POSTGRES_DB=app_db -p 5432:5432 -d postgres:16
+
+setup pgadmin
+docker run -p 5050:80 -e PGADMIN_DEFAULT_EMAIL=abhisek.das@gmail.com -e PGADMIN_DEFAULT_PASSWORD=admin --name pgadmin -d dpage/pgadmin4
+
+Open localhost:5050
+email : abhisek.das@gmail.com // Same email which was used in pgadmin setup
+password : password // Same password which was used to setup pgadmin
+
+Add a server
+General : 
+  name : :"Local Postgres"
+Connection:
+  host : host.docker.internal
+  port : 5432 // Same port used in postgres setup
+  username : workflow_user // Same username used in postgres setup
+  password : password // Same password used in postgres setup
+
+
+Change the .env
+DATABASE_URL="postgresql://workflow_user:password@localhost:5432/app_db?schema=public"
+
+each and evertime you make any change to Model , you need to migrate
+npx prisma migrate dev --name init
+npx prisma generate
