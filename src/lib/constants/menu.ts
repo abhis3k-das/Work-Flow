@@ -47,8 +47,7 @@ export const SIDEBAR_ITEMS: MenuType[] = [
     icon: Users,
     items: [
       { title: "User List", url: "/users" },
-      { title: "Invite User", url: "/users/invite" },
-      { title: "Pending Invitation", url: "/users/pending" },
+      { title: "Invite Users", url: "/users/invite" },
       { title: "Roles & Permission", url: "/users/roles" },
       { title: "Teams / Groups", url: "/users/teams" },
       { title: "User Activity", url: "/users/activity" },

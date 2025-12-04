@@ -1,7 +1,7 @@
 "use server";
 
 import { inviteUserSchema, InviteUserType } from "../lib/invitation-validation";
-import { createInvitation } from "./invitation-service";
+import { createInvitation, deleteInvitationService } from "./invitation-service";
 
 type InviteActionState = null | {
   success: boolean;
@@ -38,13 +38,28 @@ export async function createInviteAction(prevState: InviteActionState, formData:
 
     return {
       success: true,
-      message: "Invitation sent successfully!",
+    };
+  } catch (err: any) {
+    console.error("[INVITE_ACTION_ERROR]", err);
+    return {
+      success: false,
+      message: err.message || "Something went wrong. Please try again.",
+    };
+  }
+}
+
+export async function deleteInvitation(id: string) {
+  try {
+    await deleteInvitationService(id);
+    return {
+      success: true,
+      message: "Ok",
     };
   } catch (err) {
     console.error("[INVITE_ACTION_ERROR]", err);
     return {
       success: false,
-      message: "Something went wrong. Please try again.",
+      message: "Failed to delete.",
     };
   }
 }

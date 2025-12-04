@@ -14,13 +14,16 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  memberships    WorkspaceMember[]
-  tasksAssigned  Task[]            @relation("TaskAssignee")
-  tasksReviewing Task[]            @relation("TaskReviewer")
-  messages       Message[]
-  taskComments   TaskComment[]
-  documents      Document[]
+  memberships             WorkspaceMember[]
+  tasksAssigned           Task[]                   @relation("TaskAssignee")
+  tasksReviewing          Task[]                   @relation("TaskReviewer")
+  messages                Message[]
+  taskComments            TaskComment[]
+  documents               Document[]
+  passwordHash            String
   // invitations    Invitation[]
+  userRoles               UserRole[]
+  userPermissionOverrides UserPermissionOverride[]
 }
 
 model Invitation {
@@ -45,14 +48,14 @@ model Invitation {
 }
 
 model Workspace {
-  id          String            @id @default(cuid())
-  name        String
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  members     WorkspaceMember[]
-  projects    Project[]
-  channel     Channel[]
-  documents   Document[]
+  id        String            @id @default(cuid())
+  name      String
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  members   WorkspaceMember[]
+  projects  Project[]
+  channel   Channel[]
+  documents Document[]
   // invitations Invitation[]
 }
 
@@ -172,4 +175,52 @@ model Document {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+  isSystem    Boolean @default(false)
+
+  permissions Permission[] // role-level permissions
+  users       UserRole[] // many-to-many with User
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Permission {
+  id     String @id @default(cuid())
+  key    String // e.g. "projects.view.all"
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([roleId])
+}
+
+model UserRole {
+  id     String @id @default(cuid())
+  userId String
+  roleId String
+
+  user User @relation(fields: [userId], references: [id])
+  role Role @relation(fields: [roleId], references: [id])
+
+  @@unique([userId, roleId])
+  @@index([roleId])
+}
+
+model UserPermissionOverride {
+  id      String  @id @default(cuid())
+  userId  String
+  key     String // same strings as PermissionKey
+  allowed Boolean // true = force allow, false = force deny
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, key])
+  @@index([userId])
 }

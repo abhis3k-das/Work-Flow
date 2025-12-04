@@ -31,3 +31,8 @@ DATABASE_URL="postgresql://workflow_user:password@localhost:5432/app_db?schema=p
 each and evertime you make any change to Model , you need to migrate
 npx prisma migrate dev --name init
 npx prisma generate
+
+
+### Generate Permission Seeds
+npm install -D tsx typescript
+npx prisma db seed

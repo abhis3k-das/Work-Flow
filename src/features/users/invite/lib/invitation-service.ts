@@ -3,6 +3,12 @@
 import { prisma } from "@/server/db";
 import type { InviteUserType } from "./invitation-validation";
 import { revalidatePath } from "next/cache";
+import { Resend } from "resend";
+import { EmailTemplate } from "@/lib/emailTemplates/invite-template";
+import bcrypt from "bcryptjs";
+import { redirect } from "next/navigation";
+
+const APP_URL = process.env.APP_URL || "http://localhost:3000";
 
 function generateInviteToken() {
   return crypto.randomUUID();
@@ -60,9 +66,82 @@ export async function createInvitation(args: { invitedBy: string; data: InviteUs
     },
   });
 
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const acceptUrl = `${APP_URL}/users/accept-invite?token=${token}`;
+  try {
+    await resend.emails.send({
+      from: "Acme <onboarding@resend.dev>",
+      to: [data.email],
+      subject: "Hello world",
+      react: EmailTemplate({ firstName: "John", url: acceptUrl }),
+    });
+  } catch (err: any) {
+    console.log("Mail sent failed!!", err);
+    throw new Error("Failed to send mail!");
+  }
   revalidatePath("/users/invite", "page");
 
   return {
     success: true,
   };
+}
+
+export async function deleteInvitationService(id: string) {
+  const exisitingInvite = await prisma.invitation.delete({
+    where: { id: id },
+  });
+
+  if (!exisitingInvite) {
+    throw new Error("Invitation not found");
+  }
+
+  revalidatePath("/users/invite", "page");
+  return {
+    success: true,
+  };
+}
+
+export async function acceptInvitation({ token, password }: { token: string; password: string }) {
+  const invitation = await prisma.invitation.findUnique({
+    where: { token },
+  });
+
+  if (!invitation) {
+    return { success: false, message: "Invalid or expired invite." };
+  }
+
+  if (invitation.status !== "PENDING") {
+    return { success: false, message: "This invitation has already been used." };
+  }
+
+  if (!invitation.expiresAt || invitation.expiresAt < new Date()) {
+    await prisma.invitation.update({
+      where: { id: invitation.id },
+      data: { status: "EXPIRED" },
+    });
+    return { success: false, message: "This invitation has expired." };
+  }
+
+  // hash password
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  // OPTIONAL: wrap in transaction if you want strict atomicity
+  await prisma.user.create({
+    data: {
+      name: invitation.name,
+      email: invitation.email,
+      passwordHash,
+      // if you have a workspaceUser relation, also create that here
+    },
+  });
+
+  await prisma.invitation.update({
+    where: { id: invitation.id },
+    data: {
+      status: "ACCEPTED",
+    },
+  });
+
+  // you can either return and let client redirect, or redirect here
+  return { success: true };
 }

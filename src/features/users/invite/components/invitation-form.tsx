@@ -13,6 +13,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 
 type ActionState = null | {
   success: boolean;
@@ -43,7 +44,9 @@ export function InviteForm({ workspaceId, setOpen }: { workspaceId: string; setO
       const timer = setTimeout(() => setOpen(false), 300);
 
       router.refresh();
-
+      toast.success("Invitation sent", {
+        description: "The invitation has been sent successfully.",
+      });
       return () => clearTimeout(timer);
     }
   }, [state, form, setOpen, router]);
@@ -136,7 +139,7 @@ export function InviteForm({ workspaceId, setOpen }: { workspaceId: string; setO
           )}
         />
 
-        {state?.message && <p className={`text-sm ${state.success ? "text-green-600" : "text-red-600"}`}>{state.message}</p>}
+        {!state?.success && state?.message && <p className="text-sm text-red-600">{state.message}</p>}
 
         <Button type="submit" className="w-full" disabled={isSubmitting}>
           {isSubmitting ? "Sending..." : "Send Invitation"}

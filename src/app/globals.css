@@ -205,3 +205,11 @@ html.dark .customBtn:hover {
 .page-title {
   @apply mb-2 text-xl font-bold;
 }
+
+.button-md-blue {
+  @apply h-6 w-16 cursor-pointer bg-blue-500! text-xs text-white;
+}
+
+.button-md-green {
+  @apply h-6 w-16 cursor-pointer bg-green-500! text-xs text-white;
+}
