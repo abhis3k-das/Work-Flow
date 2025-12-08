@@ -1,12 +1,13 @@
 "use server";
 
+import { z } from "zod";
 import { inviteUserSchema, InviteUserType } from "../lib/invitation-validation";
 import { createInvitation, deleteInvitationService } from "./invitation-service";
 
 type InviteActionState = null | {
   success: boolean;
   message?: string;
-  errors?: Record<string, string[]>;
+  errors?: string;
 };
 
 export async function createInviteAction(prevState: InviteActionState, formData: FormData): Promise<InviteActionState> {
@@ -22,10 +23,12 @@ export async function createInviteAction(prevState: InviteActionState, formData:
     const parsed = inviteUserSchema.safeParse(values);
 
     if (!parsed.success) {
+      const error = z.prettifyError(parsed.error);
+
       return {
         success: false,
         message: "Validation failed",
-        errors: parsed.error.flatten().fieldErrors,
+        errors: error,
       };
     }
 

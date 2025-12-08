@@ -207,9 +207,20 @@ html.dark .customBtn:hover {
 }
 
 .button-md-blue {
-  @apply h-6 w-16 cursor-pointer bg-blue-500! text-xs text-white;
+  @apply h-6 w-16 cursor-pointer rounded-md border border-[#99C2FF] bg-[#E6F0FF] text-center text-xs text-[#1A73E8] dark:border-[#2F4A63] dark:bg-[#12263A] dark:text-[#4DA3FF];
+}
+.button-md-blue:hover {
+  @apply bg-[#D8E8FF] dark:bg-[#1A344D];
 }
 
-.button-md-green {
-  @apply h-6 w-16 cursor-pointer bg-green-500! text-xs text-white;
+.button-md-red {
+  @apply h-6 w-16 cursor-pointer rounded-md border border-[#FFB3AD] bg-[#FFE8E6] text-center text-xs text-[#D93025] dark:border-[#633232] dark:bg-[#3A1212] dark:text-[#FF6B6B];
+}
+.button-md-red:hover {
+  @apply bg-[#FFD9D6] dark:bg-[#4A1818];
+}
+
+.button-md-blue:disabled,
+.button-md-red:disabled {
+  @apply cursor-not-allowed opacity-50;
 }

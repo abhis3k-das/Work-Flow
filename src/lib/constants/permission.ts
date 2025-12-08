@@ -1,53 +1,164 @@
-const DASHBOARD_MODULE = ["dashboard.view.all", "dashboard.view.projects"] as const;
+type PermissionDesciption = { key: string; description: string };
 
-const USER_MODULE = [
-  "user.delete",
-  "user.view",
-  "user.invite",
-  "user.roles.create",
-  "user.teams.manage",
-  "user.activity.team.view",
-  "user.activity.full.view",
-  "user.access-control.manage",
+const DASHBOARD_MODULE: PermissionDesciption[] = [
+  { key: "dashboard.view.all", description: "View all details" },
+  { key: "dashboard.view.projects", description: "View only project specific details" },
 ] as const;
 
-const PROJECT_MODULE = [
-  "projects.view.all",
-  "projects.view.team",
-  "projects.create",
-  "projects.edit",
-  "projects.delete",
-  "projects.task.view",
-  "projects.task.edit",
-  "projects.task.delete",
-  "projects.task.create",
-  "projects.templates.manage",
-  "projects.setting.manage",
+const USER_MODULE: PermissionDesciption[] = [
+  {
+    key: "user.delete",
+    description: "Delete any user from the workspace.",
+  },
+  {
+    key: "user.view",
+    description: "View all users in the workspace.",
+  },
+  {
+    key: "user.invite",
+    description: "Invite new members to the workspace.",
+  },
+  {
+    key: "user.roles.create",
+    description: "Create new roles and manage their permissions.",
+  },
+  {
+    key: "user.teams.manage",
+    description: "Create, edit, and assign users to teams.",
+  },
+  {
+    key: "user.activity.team.view",
+    description: "View activity logs for users within the same team.",
+  },
+  {
+    key: "user.activity.full.view",
+    description: "View all workspace-level user activity logs.",
+  },
+  {
+    key: "user.access-control.manage",
+    description: "Manage access control rules and role-based permissions.",
+  },
 ] as const;
 
-const VAULT_MODULE = [
-  "vault.view.all",
-  "vault.view.project",
-  "vault.edit",
-  "vault.delete",
-  "vault.share",
-  "vault.folders.manage",
-  "vault.recycle.manage",
-  "vault.setting.manage",
+const PROJECT_MODULE: PermissionDesciption[] = [
+  {
+    key: "projects.view.all",
+    description: "View all projects across the workspace.",
+  },
+  {
+    key: "projects.view.team",
+    description: "View projects belonging only to the user's team.",
+  },
+  {
+    key: "projects.create",
+    description: "Create new projects.",
+  },
+  {
+    key: "projects.edit",
+    description: "Edit project details such as name, description, or settings.",
+  },
+  {
+    key: "projects.delete",
+    description: "Delete an entire project.",
+  },
+  {
+    key: "projects.task.view",
+    description: "View tasks inside any accessible project.",
+  },
+  {
+    key: "projects.task.edit",
+    description: "Edit any task inside a project.",
+  },
+  {
+    key: "projects.task.delete",
+    description: "Delete tasks from a project.",
+  },
+  {
+    key: "projects.task.create",
+    description: "Create new tasks inside a project.",
+  },
+  {
+    key: "projects.templates.manage",
+    description: "Create and manage project task templates.",
+  },
+  {
+    key: "projects.setting.manage",
+    description: "Manage project settings including members, workflow, and automation.",
+  },
 ] as const;
 
-const CHAT_MODULE = [
-  "chat.channel.all",
-  "chat.channel.create",
-  "chat.channel.manage",
-  "chat.dm.use",
-  "chat.assistant.use",
-  "chat.pin.message",
+const VAULT_MODULE: PermissionDesciption[] = [
+  {
+    key: "vault.view.all",
+    description: "View all files and folders in the workspace vault.",
+  },
+  {
+    key: "vault.view.project",
+    description: "View files and folders only inside assigned projects.",
+  },
+  {
+    key: "vault.edit",
+    description: "Upload, rename, or update files inside the vault.",
+  },
+  {
+    key: "vault.delete",
+    description: "Delete files or folders (move to recycle bin).",
+  },
+  {
+    key: "vault.share",
+    description: "Share files or folders with other users or teams.",
+  },
+  {
+    key: "vault.folders.manage",
+    description: "Create, rename, and organize folders inside the vault.",
+  },
+  {
+    key: "vault.recycle.manage",
+    description: "Manage recycle bin items (restore or permanently delete).",
+  },
+  {
+    key: "vault.setting.manage",
+    description: "Configure vault settings such as permissions and storage rules.",
+  },
 ] as const;
 
-const PERMISSIONS = [...DASHBOARD_MODULE, ...USER_MODULE, ...PROJECT_MODULE, ...VAULT_MODULE, ...CHAT_MODULE] as const;
+const CHAT_MODULE: PermissionDesciption[] = [
+  {
+    key: "chat.channel.all",
+    description: "Access all chat channels in the workspace.",
+  },
+  {
+    key: "chat.channel.create",
+    description: "Create new chat channels.",
+  },
+  {
+    key: "chat.channel.manage",
+    description: "Manage channel settings, members, and permissions.",
+  },
+  {
+    key: "chat.dm.use",
+    description: "Send and receive direct messages with other members.",
+  },
+  {
+    key: "chat.assistant.use",
+    description: "Use AI assistant inside chat channels and direct messages.",
+  },
+  {
+    key: "chat.pin.message",
+    description: "Pin important messages inside a channel.",
+  },
+] as const;
 
-export type PermissionKey = (typeof PERMISSIONS)[number];
+export const PERMISSIONS: PermissionDesciption[] = [
+  ...DASHBOARD_MODULE,
+  ...USER_MODULE,
+  ...PROJECT_MODULE,
+  ...VAULT_MODULE,
+  ...CHAT_MODULE,
+] as const;
+
+type PermissionObject = (typeof PERMISSIONS)[number];
+export type PermissionKey = PermissionObject["key"];
 
 export const PERMISSION_GROUPS: { module: string; label: string; permissions: { key: PermissionKey; label: string }[] }[] = [
   {
@@ -122,7 +233,7 @@ export const SYSTEM_ROLES = ["Owner", "Admin", "Member", "Viewer"] as const;
 export type SystemRole = (typeof SYSTEM_ROLES)[number];
 
 export const SYSTEM_ROLES_DETAILS: { [R in SystemRole]: PermissionKey[] } = {
-  Owner: [...PERMISSIONS],
+  Owner: [...PERMISSIONS.map((el) => el.key)],
   Admin: [
     // Dashboard
     "dashboard.view.all",

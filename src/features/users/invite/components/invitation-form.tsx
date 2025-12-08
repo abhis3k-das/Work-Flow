@@ -37,12 +37,8 @@ export function InviteForm({ workspaceId, setOpen }: { workspaceId: string; setO
 
   useEffect(() => {
     if (state?.success) {
-      // 1. reset the client-side form
       form.reset();
-
-      // 2. close the Sheet
       const timer = setTimeout(() => setOpen(false), 300);
-
       router.refresh();
       toast.success("Invitation sent", {
         description: "The invitation has been sent successfully.",

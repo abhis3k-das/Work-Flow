@@ -1,4 +1,3 @@
-// src/app/users/accept-invite/page.tsx
 import { prisma } from "@/server/db";
 import { redirect } from "next/navigation";
 import AcceptInviteForm from "@/features/users/invite/components/accept-invite-form";

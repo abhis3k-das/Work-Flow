@@ -6,7 +6,6 @@ import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
 import { EmailTemplate } from "@/lib/emailTemplates/invite-template";
 import bcrypt from "bcryptjs";
-import { redirect } from "next/navigation";
 
 const APP_URL = process.env.APP_URL || "http://localhost:3000";
 

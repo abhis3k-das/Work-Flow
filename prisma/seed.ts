@@ -1,4 +1,4 @@
-import { SYSTEM_ROLES_DETAILS, SYSTEM_ROLES } from "../src/lib/constants/permission";
+import { SYSTEM_ROLES_DETAILS, SYSTEM_ROLES, PERMISSIONS, PermissionKey, SystemRole } from "../src/lib/constants/permission";
 /**
  * prisma/seed.ts
  */
@@ -9,9 +9,36 @@ const prisma = new PrismaClient();
 async function seedSystemRoles() {
   console.log("🌱 Seeding system roles...");
 
-  for (const roleName of SYSTEM_ROLES) {
-    const permissions = SYSTEM_ROLES_DETAILS[roleName];
+  const permissionIdsObject: Partial<Record<PermissionKey, string>> = {};
+  console.log("**************************************************************");
+  console.log("*************** Creating Permissions ************************");
+  console.log();
+  for (const permission of PERMISSIONS) {
+    const data = await prisma.permission.upsert({
+      where: { key: permission.key },
+      update: { description: permission.description },
+      create: {
+        key: permission.key,
+        description: permission.description,
+      },
+    });
+    permissionIdsObject[permission.key] = data.id;
+    console.log(`✓ [PERMISSION] : CREATED : ${permission.key}`);
+  }
 
+  console.log();
+  console.log("*************** All Premission Created ***********************");
+  console.log("**************************************************************");
+
+  console.log();
+  console.log();
+  console.log();
+
+  console.log("**************************************************************");
+  console.log("******************* Creating Roles ***************************");
+  console.log();
+  const rolesIdsObject: Partial<Record<SystemRole, string>> = {};
+  for (const roleName of SYSTEM_ROLES) {
     // Upsert main role (Owner, Admin, etc.)
     const role = await prisma.role.upsert({
       where: { name: roleName },
@@ -23,20 +50,65 @@ async function seedSystemRoles() {
       },
     });
 
-    // Remove old permissions for this role
-    await prisma.permission.deleteMany({
-      where: { roleId: role.id },
-    });
+    rolesIdsObject[roleName] = role.id;
+    console.log(`✓ [ROLE] : CREATED :${roleName}`);
+  }
+  console.log();
+  console.log("******************** All Roles Created ***********************");
+  console.log("**************************************************************");
 
-    // Insert updated permissions
-    await prisma.permission.createMany({
-      data: permissions.map((key) => ({
-        key,
-        roleId: role.id,
-      })),
-    });
+  console.log();
+  console.log();
+  console.log();
 
-    console.log(`✓ ${roleName} role synced (${permissions.length} permissions)`);
+  console.log("**************************************************************");
+  console.log("************** Syncing Roles & Permissions *******************");
+  console.log();
+
+  const errors = [];
+  for (const roleName of SYSTEM_ROLES) {
+    for (const permission of SYSTEM_ROLES_DETAILS[roleName]) {
+      const roleId = rolesIdsObject[roleName];
+      if (!roleId) {
+        errors.push(`${permission} for ${roleName} skipped ${roleId} not found`);
+        continue;
+      }
+
+      const permissionId = permissionIdsObject[permission];
+      if (!permissionId) {
+        errors.push(`${permission} for ${roleName} skipped ${permissionId} not found`);
+        continue;
+      }
+
+      await prisma.rolePermission.upsert({
+        where: {
+          roleId_permissionId: {
+            roleId: roleId,
+            permissionId: permissionId,
+          },
+        },
+        update: {},
+        create: {
+          roleId: roleId,
+          permissionId: permissionId,
+        },
+      });
+      console.log(`✓ [SYNCED] : ${permission} added for ${roleName}`);
+    }
+  }
+
+  console.log();
+  console.log("******************** Syncing Completed ***********************");
+  console.log("**************************************************************");
+
+  console.log();
+  console.log();
+  if (errors.length > 0) {
+    console.log("***************ERRORS********************");
+    for (const error in errors) {
+      console.log(error);
+    }
+    console.log("****************************************");
   }
 }
 
